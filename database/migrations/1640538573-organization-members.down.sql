@@ -1,0 +1,11 @@
+DROP TRIGGER handle_new_organization ON public.organizations;
+DROP FUNCTION public.handle_new_organization;
+DROP POLICY "organization_members.allow_insert_by_managers" ON public.organization_members;
+DROP POLICY "organization_members.allow_delete_by_managers" ON public.organization_members;
+DROP POLICY "organization_members.allow_update_by_managers" ON public.organization_members;
+DROP FUNCTION public.member_can_do(organization_id uuid, action_code varchar);
+DROP FUNCTION public.member_has_role(organization_id uuid, role int);
+DROP VIEW public.my_organizations;
+DROP VIEW public.my_memberships;
+DROP TABLE public.organization_members;
+DROP DOMAIN member_role;

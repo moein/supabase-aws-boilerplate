@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "lib": [
+      "es2019",
+      "es2020"
+    ],
+    "module": "commonjs",
+    "target": "es2019",
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "types": [
+      "node",
+      "reflect-metadata"
+    ],
+    "resolveJsonModule": true,
+    "importHelpers": false,
+    "declaration": true,
+    "strict": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "./node_modules/*"
+      ]
+    },
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "include": [ "lib/**/*.ts", "handlers/*.ts" ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

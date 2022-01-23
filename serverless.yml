@@ -1,0 +1,55 @@
+service: supabase-boilerplate
+frameworkVersion: '2 || 3'
+useDotenv: true
+variablesResolutionMode: 20210326
+
+provider:
+  name: aws
+  eventBridge:
+    useCloudFormation: true
+  runtime: nodejs12.x
+  lambdaHashingVersion: '20201221'
+  region: ${env:AWS_REGION,"eu-west-1"}
+  profile: ${env:AWS_PROFILE,"default"}
+  environment:
+    SUPABASE_URL: ${env:SUPABASE_URL}
+    SUPABASE_HOOK_SECRET: ${env:SUPABASE_HOOK_SECRET}
+    SUPABASE_API_SECRET: ${env:SUPABASE_API_SECRET}
+    SUPABASE_JWT_SECRET: ${env:SUPABASE_JWT_SECRET}
+    LOG_LEVEL: ${env:LOG_LEVEL,""}
+
+functions:
+  api:
+    handler: handlers/http/express.handler
+    events:
+      - http:
+          path: /api/{proxy+}
+          method: any
+          authorizer: httpAuthorizer
+
+  httpAuthorizer:
+    handler: handlers/http/authorizer.supabaseJwt
+
+  handleInvitationsInsert:
+    handler: handlers/supabase-webhooks/organization-invitations.handleInsert
+    events:
+      - eventBridge:
+          eventBus: ${construct:supabase.busName}
+          pattern:
+            source:
+              - supabase
+            detail-type:
+              - organization_invitations.insert
+
+constructs:
+  supabase:
+    type: webhook
+    eventType: $request.header.event
+    path: /webhooks/supabase
+    authorizer:
+      handler: handlers/supabase-webhooks/authorizer.supabaseHookSecret
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-lift
+  - serverless-offline

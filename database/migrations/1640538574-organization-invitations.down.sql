@@ -1,0 +1,11 @@
+DROP TRIGGER aws_organization_invitations_insert ON public.organization_invitations;
+DROP TRIGGER IF EXISTS handle_new_user ON auth.users;
+DROP FUNCTION public.handle_new_user;
+DROP TRIGGER validate_invitation ON public.organization_invitations;
+DROP FUNCTION validate_invitation;
+DROP TRIGGER handle_new_invitation ON public.organization_invitations;
+DROP FUNCTION handle_new_invitation;
+DROP POLICY "organization_invitations.allow_select_by_manager" ON public.organization_invitations;
+DROP POLICY "organization_invitations.allow_insert_by_manager" ON public.organization_invitations;
+DROP POLICY "organization_invitations.allow_delete_by_manager" ON public.organization_invitations;
+DROP TABLE public.organization_invitations;

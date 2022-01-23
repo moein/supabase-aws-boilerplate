@@ -1,0 +1,39 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  migration:
+    runs-on: ubuntu-latest
+    name: Migration
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install pg-migrate
+        run: yarn global add @urbica/pg-migrate
+      - name: Migrate
+        env:
+          SUPABASE_HOST: ${{ secrets.SUPABASE_HOST_DEV }}
+          SUPABASE_PASSWORD: ${{ secrets.SUPABASE_PASSWORD_DEV }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL_DEV }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET_DEV }}
+        run: ./migrate.sh migrate
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: yarn install --frozen-lockfile
+      - name: serverless deploy
+        uses: serverless/github-action@master
+        with:
+          args: deploy --stage dev
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
